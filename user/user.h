@@ -1,6 +1,10 @@
 struct stat;
 struct rtcdate;
 struct pstat;
+struct rusage; // Task 3 declaring rusage
+
+// Task 3 declaring wait 2 
+int wait2(int*, struct rusage*);
 
 // system calls
 int fork(void);
