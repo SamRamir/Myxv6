@@ -84,6 +84,10 @@ struct trapframe {
 struct proc {
   struct spinlock lock;
 
+  // TASK2: Adding cputime variable
+  uint cputime;
+
+
   // p->lock must be held when using these:
   enum procstate state;        // Process state
   void *chan;                  // If non-zero, sleeping on chan

@@ -6,6 +6,10 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "pstat.h"
+//#include "kernel/pstat.h" // Task3
+
+
 
 uint64
 sys_exit(void)
@@ -106,4 +110,19 @@ sys_getprocs(void)
   if (argaddr(0, &addr) < 0)
     return -1;
   return(procinfo(addr));
+}
+
+//Task 3
+//Implenting sys_wait2 WIP
+uint64
+sys_wait2(void)
+{
+  uint64 val;  
+  uint64 val1;  
+
+  if (argaddr(0, &val) < 0)
+    return -1;
+  if (argaddr(0, &val1) < 0)
+    return -1;
+  return wait2(val, val1);
 }

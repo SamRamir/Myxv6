@@ -1,3 +1,6 @@
+//task3
+//#include "rusage.h"
+//#include "pstat.h"
 struct buf;
 struct context;
 struct file;
@@ -8,6 +11,7 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+struct rusage;
 
 // bio.c
 void            binit(void);
@@ -105,6 +109,7 @@ int             either_copyout(int user_dst, uint64 dst, void *src, uint64 len);
 int             either_copyin(void *dst, int user_src, uint64 src, uint64 len);
 void            procdump(void);
 int             procinfo(uint64);
+int             wait2(uint64 p1, uint64 p2); //task 3
 
 // swtch.S
 void            swtch(struct context*, struct context*);

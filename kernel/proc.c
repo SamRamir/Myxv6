@@ -4,8 +4,9 @@
 #include "riscv.h"
 #include "spinlock.h"
 #include "proc.h"
-#include "pstat.h"
 #include "defs.h"
+#include "pstat.h" // Task 3
+
 
 struct cpu cpus[NCPU];
 
@@ -120,6 +121,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->cputime = 0; // TASK 2: initializing cpu time to 0
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -663,7 +665,7 @@ procinfo(uint64 addr)
 {
   struct proc *p;
   struct proc *thisproc = myproc();
-  struct pstat procinfo;
+//  struct pstat procinfo;
   int nprocs = 0;
   for(p = proc; p < &proc[NPROC]; p++){ 
     if(p->state == UNUSED)
@@ -683,4 +685,53 @@ procinfo(uint64 addr)
     addr += sizeof(procinfo);
   }
   return nprocs;
+}
+
+
+// Task  3
+// Implementing wait2 function
+int
+wait2(uint64 addr, uint64 addr1)
+{
+  struct proc *np;
+  int havekids, pid;
+  struct proc *p = myproc();
+  acquire(&wait_lock);
+  struct rusage cptime;
+
+  for (;;) {
+    havekids = 0;
+    for (np = proc; np < &proc[NPROC]; np++) {
+      if (np->parent == p) {
+        acquire(&np->lock);
+        havekids = 1;
+        if (np->state == ZOMBIE) {
+          pid = np->pid;
+          if (addr != 0 && copyout(p->pagetable, addr, (char *)&np->xstate, sizeof(np->xstate)) < 0) {
+            release(&np->lock);
+            release(&wait_lock);
+            return -1;
+          }
+          cptime.cputime = np->cputime;
+          if (addr1 != 0 && copyout(p->pagetable, addr1, (char *)&cptime, sizeof(cptime)) < 0) {
+            release(&np->lock);
+            release(&wait_lock);
+            return -1;
+          }
+          freeproc(np);
+          release(&np->lock);
+          release(&wait_lock);
+          return pid;
+        }
+        release(&np->lock);
+      }
+    }
+
+    if(!havekids || p->killed){
+      release(&wait_lock);
+      return -1;
+    }
+
+    sleep(p, &wait_lock);  //DOC: wait-sleep
+  }
 }
