@@ -136,6 +136,10 @@ UPROGS=\
 	$U/_ps\
 	$U/_pstree\
 	$U/_pstest\
+        $U/_matmul\
+        $U/_sleep\
+        $U/_time1\
+
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
