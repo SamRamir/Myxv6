@@ -107,3 +107,20 @@ sys_getprocs(void)
     return -1;
   return(procinfo(addr));
 }
+
+// task 3
+// sys_wait2 implementation
+
+// system call for sys_wait2
+uint64
+sys_wait2(void)
+{
+  uint64 p;
+  uint64 p1;  // new  argument pointer
+
+  if (argaddr(0, &p) < 0)
+    return -1;
+  if (argaddr(0, &p1) < 0)
+    return -1;
+  return wait2(p, p1);
+}

@@ -685,3 +685,58 @@ procinfo(uint64 addr)
   }
   return nprocs;
 }
+
+
+// Task 3 
+// wait2 functino implementation 
+int
+wait2(uint64 addr, uint64 addr1)
+{
+  struct proc *np;
+  int havekids, pid;
+  struct proc *p = myproc();
+  acquire(&wait_lock);
+  struct rusage cptime;
+
+  for (;;) {
+    // Scan through table looking for exited children.
+    havekids = 0;
+    for (np = proc; np < &proc[NPROC]; np++) {
+      if (np->parent == p) {
+        acquire(&np->lock);
+        havekids = 1;
+        if (np->state == ZOMBIE) {
+          // Found one.
+          pid = np->pid;
+          if (addr != 0 && copyout(p->pagetable, addr, (char *)&np->xstate, sizeof(np->xstate)) < 0) {
+            release(&np->lock);
+            release(&wait_lock);
+            return -1;
+          }
+	  // the cputime  sicen the process started to addr1, making a pointer from user
+          cptime.cputime = np->cputime;
+	  // values in adress are saved when user has passed in a pointer
+          if (addr1 != 0 && copyout(p->pagetable, addr1, (char *)&cptime, sizeof(cptime)) < 0) {
+            release(&np->lock);
+            release(&wait_lock);
+            return -1;
+          }
+          freeproc(np);
+          release(&np->lock);
+          release(&wait_lock);
+          return pid;
+        }
+        release(&np->lock);
+      }
+    }
+
+    // No point waiting if we don't have any children.
+    if(!havekids || p->killed){
+      release(&wait_lock);
+      return -1;
+    }
+
+    // Wait for a child to exit.
+    sleep(p, &wait_lock);  //DOC: wait-sleep
+  }
+}
