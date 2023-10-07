@@ -84,6 +84,8 @@ struct trapframe {
 struct proc {
   struct spinlock lock;
 
+  int priority; // Task 1: Adding priority field
+
   // p->lock must be held when using these:
   enum procstate state;        // Process state
   void *chan;                  // If non-zero, sleeping on chan

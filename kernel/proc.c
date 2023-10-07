@@ -665,6 +665,7 @@ procinfo(uint64 addr)
   struct proc *thisproc = myproc();
   struct pstat procinfo;
   int nprocs = 0;
+ // int priority; // task 1  adding field 
   for(p = proc; p < &proc[NPROC]; p++){ 
     if(p->state == UNUSED)
       continue;
@@ -672,6 +673,7 @@ procinfo(uint64 addr)
     procinfo.pid = p->pid;
     procinfo.state = p->state;
     procinfo.size = p->sz;
+    procinfo.priority = p->priority; //task 1
     if (p->parent)
       procinfo.ppid = (p->parent)->pid;
     else
