@@ -5,4 +5,6 @@ struct pstat {
   int ppid;        // Parent process ID
   char name[16];   // Parent command name
   int priority; // task 1
+  int age; // task 2
+  int  readytime; // task 2
 };

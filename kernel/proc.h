@@ -85,6 +85,7 @@ struct proc {
   struct spinlock lock;
 
   int priority; // Task 1: Adding priority field
+  int readytime; //Task 2: Adding readytime field.  timestamp of when process is runnable
 
   // p->lock must be held when using these:
   enum procstate state;        // Process state

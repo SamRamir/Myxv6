@@ -567,6 +567,7 @@ wakeup(void *chan)
       acquire(&p->lock);
       if(p->state == SLEEPING && p->chan == chan) {
         p->state = RUNNABLE;
+        p->readytime = ticks; // Task 2  readytime to current time
       }
       release(&p->lock);
     }
