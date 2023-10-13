@@ -120,6 +120,7 @@ sys_getpriority(void)
 
 // task 1
 // set priority
+
 uint64
 sys_setpriority(int priority)
 {
@@ -131,3 +132,15 @@ sys_setpriority(int priority)
  return 0;
 }
 
+/*
+uint64
+ sys_setpriority(void) {
+  int new_priority;
+  if (argint(0, &new_priority) < 0) {
+    return -1;
+  }
+  struct proc* p = myproc();
+  p->priority = new_priority;
+  return 0;
+}
+*/

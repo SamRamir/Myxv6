@@ -674,7 +674,7 @@ procinfo(uint64 addr)
     procinfo.pid = p->pid;
     procinfo.state = p->state;
     procinfo.size = p->sz;
-    procinfo.priority = p->priority; //task 1
+//    procinfo.priority = p->priority; //task 1
     if (p->parent)
       procinfo.ppid = (p->parent)->pid;
     else
