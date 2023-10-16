@@ -122,13 +122,13 @@ sys_getpriority(void)
 // set priority
 
 uint64
-sys_setpriority(int priority)
+sys_setpriority(int  new_priority)
 {
  // checking if priority is in valid range
- if (priority <0 || priority >99)
+ if (new_priority <0 || new_priority >99)
    return -1;
 
-  myproc()->priority = priority;
+  myproc()->priority = new_priority;
  return 0;
 }
 

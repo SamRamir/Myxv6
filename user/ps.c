@@ -30,7 +30,7 @@ main(int argc, char **argv)
 
    // task 2 if statement
    if (uproc[i].state == RUNNABLE){
-     int age = current_time  - uproc[i].readytime; // task 2 
+     int age = current_time - uproc[i].readytime; // task 2 
      printf("%d\t%s\t%l\t%d\t%s\t%d\t%d\n", uproc[i].pid, state,
                    uproc[i].size, uproc[i].ppid, uproc[i].name, uproc[i].priority,age);
    } else {
