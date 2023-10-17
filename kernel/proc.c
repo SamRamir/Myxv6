@@ -7,6 +7,8 @@
 #include "pstat.h"
 #include "defs.h"
 
+int scheduler_policy = SCHEDULER_RR; // task 3
+
 struct cpu cpus[NCPU];
 
 struct proc proc[NPROC];
@@ -446,24 +448,54 @@ scheduler(void)
     // Avoid deadlock by ensuring that devices can interrupt.
     intr_on();
 
-    for(p = proc; p < &proc[NPROC]; p++) {
-      acquire(&p->lock);
-      if(p->state == RUNNABLE) {
-        // Switch to chosen process.  It is the process's job
-        // to release its lock and then reacquire it
-        // before jumping back to us.
-        p->state = RUNNING;
-        c->proc = p;
-        swtch(&c->context, &p->context);
+    // Check the compile-time defined scheduling policy
+    if (scheduler_policy == SCHEDULER_RR) {
+      // Round-Robin Scheduler (your existing code for round-robin scheduling)
+      for(p = proc; p < &proc[NPROC]; p++) {
+        acquire(&p->lock);
+        if(p->state == RUNNABLE) {
+          // Switch to chosen process. It is the process's job
+          // to release its lock and then reacquire it
+          // before jumping back to us.
+          p->state = RUNNING;
+          c->proc = p;
+          swtch(&c->context, &p->context);
 
+          // Process is done running for now.
+          // It should have changed its p->state before coming back.
+          c->proc = 0;
+        }
+        release(&p->lock);
+      }
+    } else if (scheduler_policy == SCHEDULER_PRIORITY) {
+      // Priority-Based Scheduler
+      struct proc *selected = 0;
+      int highest_priority = -1;
+
+      for(p = proc; p < &proc[NPROC]; p++) {
+        acquire(&p->lock);
+        if(p->state == RUNNABLE && p->priority > highest_priority) {
+          // Find the highest priority runnable process
+          highest_priority = p->priority;
+          selected = p;
+        }
+        release(&p->lock);
+      }
+
+      if (selected) {
+        acquire(&selected->lock);
+        selected->state = RUNNING;
+        c->proc = selected;
+        swtch(&c->context, &selected->context);
         // Process is done running for now.
         // It should have changed its p->state before coming back.
         c->proc = 0;
+        release(&selected->lock);
       }
-      release(&p->lock);
     }
   }
 }
+
 
 // Switch to scheduler.  Must hold only p->lock
 // and have changed proc->state. Saves and restores
