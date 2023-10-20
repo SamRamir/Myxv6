@@ -105,6 +105,7 @@ sys_getprocs(void)
 
   if (argaddr(0, &addr) < 0)
     return -1;
+ 
   return(procinfo(addr));
 }
 
@@ -122,13 +123,13 @@ sys_getpriority(void)
 // set priority
 
 uint64
-sys_setpriority(int  new_priority)
+sys_setpriority(int priority)
 {
  // checking if priority is in valid range
- if (new_priority <0 || new_priority >99)
+ if (priority <0 || priority >99)
    return -1;
-
-  myproc()->priority = new_priority;
+  printf("Priority: %d",priority);
+  myproc()->priority = priority;
  return 0;
 }
 

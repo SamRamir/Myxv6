@@ -122,6 +122,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->priority = 10; // task 1 updated
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -283,6 +284,9 @@ fork(void)
   if((np = allocproc()) == 0){
     return -1;
   }
+
+  //  initializing priority
+  np->priority = DEFAULT_PRIORITY;
 
   // Copy user memory from parent to child.
   if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
