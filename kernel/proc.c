@@ -446,7 +446,8 @@ scheduler(void)
 {
   struct proc *p;
   struct cpu *c = mycpu();
-  
+  int currtime = ticks; 
+ 
   c->proc = 0;
   for(;;){
     // Avoid deadlock by ensuring that devices can interrupt.
@@ -472,16 +473,22 @@ scheduler(void)
         release(&p->lock);
       }
     } else if (scheduler_policy == SCHEDULER_PRIORITY) {
-      // Priority-Based Scheduler
+      // Priority-Based Scheduler with Aging
       struct proc *selected = 0;
       int highest_priority = -1;
 
       for(p = proc; p < &proc[NPROC]; p++) {
         acquire(&p->lock);
-        if(p->state == RUNNABLE && p->priority > highest_priority) {
-          // Find the highest priority runnable process
-          highest_priority = p->priority;
-          selected = p;
+        if(p->state == RUNNABLE) {
+          // Calculate aging factor based on how long the process has been waiting
+          int aging_factor = currtime - p->readytime;
+
+          // Update the effective priority based on aging
+          int effective_priority = p->priority + aging_factor;
+          if (effective_priority > highest_priority) {
+            highest_priority = effective_priority;
+            selected = p;
+          }
         }
         release(&p->lock);
       }
