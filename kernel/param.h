@@ -11,7 +11,6 @@
 #define NBUF         (MAXOPBLOCKS*3)  // size of disk block cache
 #define FSSIZE       1000  // size of file system in blocks
 #define MAXPATH      128   // maximum file path name
-//#define PR_SCHED      1    // task 3 enable priority scheduler1 ,0 to disable
 #define SCHEDULER_RR 0 // Round-Robin Scheduler
 #define SCHEDULER_PRIORITY 1 // Priority-Based Scheduler
 #define DEFAULT_PRIORITY 0

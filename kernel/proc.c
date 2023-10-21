@@ -8,6 +8,8 @@
 #include "defs.h"
 
 int scheduler_policy = SCHEDULER_RR; // task 3
+//int scheduler_policy = SCHEDULER_PRIORITY; // task 3
+
 
 struct cpu cpus[NCPU];
 
@@ -110,6 +112,10 @@ allocproc(void)
   struct proc *p;
 
   for(p = proc; p < &proc[NPROC]; p++) {
+    // testing priorit
+    if(p->pid % 2 == 0){
+      p->priority = 4;
+    } // end testig for setting priority
     acquire(&p->lock);
     if(p->state == UNUSED) {
       goto found;
@@ -454,7 +460,7 @@ scheduler(void)
 
     // Check the compile-time defined scheduling policy
     if (scheduler_policy == SCHEDULER_RR) {
-      // Round-Robin Scheduler (your existing code for round-robin scheduling)
+      // Round-Robin Scheduler
       for(p = proc; p < &proc[NPROC]; p++) {
         acquire(&p->lock);
         if(p->state == RUNNABLE) {
@@ -465,8 +471,6 @@ scheduler(void)
           c->proc = p;
           swtch(&c->context, &p->context);
 
-          // Process is done running for now.
-          // It should have changed its p->state before coming back.
           c->proc = 0;
         }
         release(&p->lock);
@@ -491,8 +495,6 @@ scheduler(void)
         selected->state = RUNNING;
         c->proc = selected;
         swtch(&c->context, &selected->context);
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
         c->proc = 0;
         release(&selected->lock);
       }
@@ -710,7 +712,7 @@ procinfo(uint64 addr)
     procinfo.pid = p->pid;
     procinfo.state = p->state;
     procinfo.size = p->sz;
-//    procinfo.priority = p->priority; //task 1
+    procinfo.priority = p->priority; //task 1
     if (p->parent)
       procinfo.ppid = (p->parent)->pid;
     else
