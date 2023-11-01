@@ -48,6 +48,28 @@ sys_wait(void)
   return wait(p);
 }
 
+// task 2 update
+int
+sys_sbrk(void)
+{
+    int n;
+    if (argint(0, &n) < 0)
+        return -1;
+
+    struct proc *curproc = myproc();
+
+    // Ensure that we are not reducing the heap size below its original size
+    if (n < 0 && curproc->sz + n < curproc->sz)
+        return -1;
+
+    curproc->sz += n;
+    return curproc->sz - n;
+}
+
+
+
+
+/*
 uint64
 sys_sbrk(void)
 {
@@ -61,6 +83,9 @@ sys_sbrk(void)
     return -1;
   return addr;
 }
+*/
+
+//
 
 uint64
 sys_sleep(void)
