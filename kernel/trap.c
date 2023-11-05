@@ -65,7 +65,34 @@ usertrap(void)
     intr_on();
 
     syscall();
-  } else if((which_dev = devintr()) != 0){
+  } else if (r_scause() == 13 || r_scause() == 15) {
+    // 13: Page load fault, 15: Page store fault
+    if (r_stval() >= p->sz) {
+      p->killed = 1;
+      goto end;
+    }
+
+    if (r_stval() < p->ustack) {
+      printf("Access guard page is invalid.\n");
+      p->killed = 1;
+      goto end;
+    }
+
+    // round vm page to page boundary
+    uint64 vm = PGROUNDDOWN(r_stval());
+
+    char *pa = kalloc();
+    if (pa == 0) {
+      p->killed = 1;
+      goto end;
+    }
+    memset(pa, 0, PGSIZE);
+    // install page to page table
+    if (mappages(p->pagetable, vm, PGSIZE, (uint64)pa, PTE_W | PTE_R | PTE_X | PTE_U) != 0) {
+      kfree(pa);
+      p->killed = 1;
+    }
+  } else if((which_dev = devintr()) != 0) {
     // ok
   } else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
@@ -73,15 +100,17 @@ usertrap(void)
     p->killed = 1;
   }
 
-  if(p->killed)
+end:
+  if (p->killed)
     exit(-1);
 
   // give up the CPU if this is a timer interrupt.
-  if(which_dev == 2)
+  if (which_dev == 2)
     yield();
 
   usertrapret();
 }
+
 
 //
 // return to user space
