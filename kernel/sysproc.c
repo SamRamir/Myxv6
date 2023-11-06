@@ -8,6 +8,7 @@
 #include "proc.h"
 //#include "kalloc.c" // task 1
 
+//#define PGSIZE 4096
 // Page table entry flags task 1
 #define PTE_P 0x001 // Present
 #define PTE_PG 0x080 // Page Global
@@ -143,7 +144,14 @@ sys_getprocs(void)
   return(procinfo(addr));
 }
 
+uint64
+sys_freepmem(void)
+{
+  return kfreepagecount() * PGSIZE;
+}
 
+
+/*
 // Task 1 freepmeme
 uint64
 sys_freepmem(void)
@@ -186,3 +194,4 @@ sys_freepmem(void)
     release(&curproc->lock);
     return -1;
 }
+*/
