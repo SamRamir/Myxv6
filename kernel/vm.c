@@ -162,7 +162,41 @@ mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)
 // Remove npages of mappings starting from va. va must be
 // page-aligned. The mappings must exist.
 // Optionally free the physical memory.
+
 void
+uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
+{
+  uint64 a;
+  pte_t *pte;
+
+  if((va % PGSIZE) != 0)
+    panic("uvmunmap: not aligned");
+
+  for(a = va; a < va + npages*PGSIZE; a += PGSIZE){
+    pte = walk(pagetable, a, 0); // Get the page table entry for the address
+
+    if(pte && (*pte & PTE_V)) {
+      // Only unmap if the page is mapped and marked as valid
+      if(PTE_FLAGS(*pte) == PTE_V) {
+        // Handle leaf pages here, if necessary
+      }
+
+      if(do_free) {
+        uint64 pa = PTE2PA(*pte);
+        kfree((void*)pa);
+      }
+      *pte = 0; // Clear the page table entry to unmap the page
+    } else {
+      // Page is not mapped; you can choose to handle this case differently
+      // (e.g., print a message or take other action)
+      // panic("uvmunmap: not mapped");
+    }
+  }
+}
+
+
+
+/*
 uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
 {
   uint64 a;
@@ -184,7 +218,7 @@ uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
     }
     *pte = 0;
   }
-}
+}*/
 
 // create an empty user page table.
 // returns 0 if out of memory.
@@ -343,7 +377,31 @@ uvmclear(pagetable_t pagetable, uint64 va)
 // Copy from kernel to user.
 // Copy len bytes from src to virtual address dstva in a given page table.
 // Return 0 on success, -1 on error.
+
 int
+copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
+{
+  uint64 n, va0, pa0;
+
+  while(len > 0){
+    va0 = PGROUNDDOWN(dstva);
+    pa0 = walkaddr(pagetable, va0);
+    n = PGSIZE - (dstva - va0);
+    if(n > len)
+      n = len;
+
+    if(pa0 != 0)
+      memmove((void *)(pa0 + (dstva - va0)), src, n);
+
+    len -= n;
+    src += n;
+    dstva = va0 + PGSIZE;
+  }
+  return 0;
+}
+
+
+/* int
 copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 {
   uint64 n, va0, pa0;
@@ -363,12 +421,40 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
     dstva = va0 + PGSIZE;
   }
   return 0;
-}
+} */
 
 // Copy from user to kernel.
 // Copy len bytes to dst from virtual address srcva in a given page table.
 // Return 0 on success, -1 on error.
+
 int
+copyin(pagetable_t pagetable, char *dst, uint64 srcva, uint64 len)
+{
+  uint64 n, va0, pa0;
+
+  while(len > 0){
+    va0 = PGROUNDDOWN(srcva);
+    pa0 = walkaddr(pagetable, va0);
+    n = PGSIZE - (srcva - va0);
+    if(n > len)
+      n = len;
+    if (pa0 != 0) {
+      // In order to handle the case in which a process passes a valid address
+      // from sbrk() to a system call such as read or write,
+      // but the memory for that address has not yet been allocated.
+      // Hence, only memmove() if pa0 is not NULL.
+      memmove(dst, (void *)(pa0 + (srcva - va0)), n);
+    }
+
+    len -= n;
+    dst += n;
+    srcva = va0 + PGSIZE;
+  }
+  return 0;
+}
+
+
+/* int
 copyin(pagetable_t pagetable, char *dst, uint64 srcva, uint64 len)
 {
   uint64 n, va0, pa0;
@@ -388,7 +474,7 @@ copyin(pagetable_t pagetable, char *dst, uint64 srcva, uint64 len)
     srcva = va0 + PGSIZE;
   }
   return 0;
-}
+}*/
 
 // Copy a null-terminated string from user to kernel.
 // Copy bytes to dst from virtual address srcva in a given page table,
