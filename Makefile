@@ -140,6 +140,7 @@ UPROGS=\
 	$U/_memory-user\
 	$U/_testcase1\
 	$U/_testcase2\
+	$U/_testcase3\
 
 
 fs.img: mkfs/mkfs README $(UPROGS)

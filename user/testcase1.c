@@ -1,22 +1,25 @@
+// this is code for free.c
 #include "kernel/types.h"
 #include "user/user.h"
 
-int main() {
-    int page_size = 4096;  // Page size in xv6 (4 KB)
+int
+main(int argc, char *argv[])
+{
+    uint64 divisor = 1;
 
-    // Step 1: Allocate one page of memory
-    char *mem = sbrk(page_size);
-    if (mem == (char*)-1) {
-        printf("Memory allocation failed\n");
-        exit(0);
+    if (argc == 2) {
+        switch (argv[1][1]) {
+    case 'k':    
+        divisor = 1024;
+        break;
+    case 'm':
+        divisor = 1024*1024;
+        break;
+    }
     }
 
-    // Step 2: Check that memory was successfully allocated
-    printf("Memory allocated at address: %p\n", mem);
-
-    // Step 3: Free the allocated memory
-    sbrk(-page_size);
-    printf("Memory freed\n");
+    printf("%l\n", freepmem()/divisor);
 
     exit(0);
 }
+

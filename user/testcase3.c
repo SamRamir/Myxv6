@@ -9,25 +9,29 @@ int main(int argc, char *argv[]) {
     uint start = atoi(argv[1]);
     uint limit = atoi(argv[2]);
     uint increment = atoi(argv[3]);
-    uint i;
-    // uint j;
+    uint i, j;
     int *array;
-    for (i=start; i<=limit; i+=increment) {
-    printf("allocating %p mebibytes\n", i); 
-    array = (int *) malloc(i*1024*1024);
-    printf("malloc returned %p\n", array);
+
+    for (i = start; i <= limit; i += increment) {
+        printf("allocating %d mebibytes\n", i);
+        array = (int *)malloc(i * 1024 * 1024);
+        printf("malloc returned %p\n", array);
         if (!array) {
             printf("malloc failed\n");
-        exit(-1);
+            exit(-1);
         }
-/*    for (j = 0; j <= i*1024*1024/4; j++)
-        array[j] = j;
-        */
-    sleep(50);
-    printf("freeing %p mebibytes\n", i); 
-    free(array);
-    sleep(50);
+
+        // Randomly touch just some pages
+        for (j = 0; j <= i * 1024 * 1024 / 4; j += (i * 1024 * 1024 / 4) / 10) {
+            array[j] = j;
+        }
+
+        sleep(5);
+        printf("freeing %d mebibytes\n", i);
+        free(array);
+        sleep(5);
     }
 
     exit(0);
 }
+
