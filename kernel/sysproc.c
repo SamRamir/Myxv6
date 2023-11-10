@@ -6,17 +6,6 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
-//#include "kalloc.c" // task 1
-
-//#define PGSIZE 4096
-// Page table entry flags task 1
-#define PTE_P 0x001 // Present
-#define PTE_PG 0x080 // Page Global
-// maps a physical address to a virtual address,
-void *P2V(uint64 pa) {
-    return (void *)(pa + KERNBASE);
-}
-// task 1 end
 
 uint64
 sys_exit(void)
@@ -49,44 +38,27 @@ sys_wait(void)
   return wait(p);
 }
 
-// task 2 update
+// task 2
+// sys_sbrk system call implemntation
 int
 sys_sbrk(void)
 {
     int n;
+    // retrieve argument 
     if (argint(0, &n) < 0)
         return -1;
 
+    // get process
     struct proc *curproc = myproc();
 
     // Ensure that we are not reducing the heap size below its original size
     if (n < 0 && curproc->sz + n < curproc->sz)
         return -1;
 
+    // update heaps size
     curproc->sz += n;
     return curproc->sz - n;
 }
-
-
-
-
-/*
-uint64
-sys_sbrk(void)
-{
-  int addr;
-  int n;
-
-  if(argint(0, &n) < 0)
-    return -1;
-  addr = myproc()->sz;
-  if(growproc(n) < 0)
-    return -1;
-  return addr;
-}
-*/
-
-//
 
 uint64
 sys_sleep(void)
