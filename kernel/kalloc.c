@@ -24,20 +24,8 @@ struct {
 } kmem;
 
 // Task 1 
-void
-kfree_phys_page(void *pa) {
-    struct run *r = (struct run *)pa;
-
-    acquire(&kmem.lock);
-    r->next = kmem.freelist;
-    kmem.freelist = r;
-    release(&kmem.lock);
-}
-
-
-// update
 uint64
-kfreepagecount(void)
+freepmem(void)
 {
   struct run *list;
   int count;
