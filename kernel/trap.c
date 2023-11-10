@@ -73,12 +73,6 @@ usertrap(void)
       goto end;
     }
 
-    if (r_stval() < p->ustack) {
-      printf("Access guard page is invalid.\n");
-      p->killed = 1;
-      goto end;
-    }
-
     // round vm page to page boundary
     uint64 vm = PGROUNDDOWN(r_stval());
 
