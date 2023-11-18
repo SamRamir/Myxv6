@@ -1,6 +1,9 @@
 #include "kernel/types.h"
 #include "user/user.h"
 #include "kernel/stat.h"
+#include <stddef.h>
+#include <stdint.h>
+
 
 #define BSIZE 10
 #define MAX 10
@@ -42,7 +45,7 @@ int
 main(int argc, char *argv[])
 {
    // replace null with 0 ? task1.b
-    buffer = (buffer_t *) mmap(0, sizeof(buffer_t),
+    buffer = (buffer_t *) mmap(NULL, sizeof(buffer_t),
                        PROT_READ | PROT_WRITE,
                    MAP_ANONYMOUS | MAP_PRIVATE,
                    -1, 0);
