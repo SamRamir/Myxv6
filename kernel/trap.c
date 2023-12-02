@@ -74,9 +74,11 @@ usertrap(void)
     
   // Start of task1.b change
   } else if(r_scause() == 13 || r_scause() == 15){
+    // Checking if the faulting address is exceding the process's size
     if(r_stval() >= p->sz){
       for(int i=0; i<MAX_MMR; i++){
         if(p->mmr[i].addr < r_stval() && p->mmr[i].valid && p->mmr[i].addr+p->mmr[i].length > r_stval()){
+          // Checking if read or write fault and if corresponding permission is not allowed          
           if( (r_scause() == 13 && (p->mmr[i].prot & PROT_READ) == 0) || (r_scause() == 15 && (p->mmr[i].prot & PROT_WRITE) == 0)){
             p->killed = 1;
             exit(-1);
