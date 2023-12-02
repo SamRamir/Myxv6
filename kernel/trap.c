@@ -76,16 +76,10 @@ usertrap(void)
   } else if(r_scause() == 13 || r_scause() == 15){
     if(r_stval() >= p->sz){
       for(int i=0; i<MAX_MMR; i++){
-        if(p->mmr[i].valid && p->mmr[i].addr < r_stval() && p->mmr[i].addr+p->mmr[i].length > r_stval()){
-          // page fault load
-          if(r_scause() == 13 && ((p->mmr[i].prot & PROT_READ) == 0)){
+        if(p->mmr[i].addr < r_stval() && p->mmr[i].valid && p->mmr[i].addr+p->mmr[i].length > r_stval()){
+          if( (r_scause() == 13 && (p->mmr[i].prot & PROT_READ) == 0) || (r_scause() == 15 && (p->mmr[i].prot & PROT_WRITE) == 0)){
             p->killed = 1;
             exit(-1);
-          }
-          // page fault store
-          if(r_scause() == 15 && ((p->mmr[i].prot & PROT_READ) == 0)){
-              p->killed = 1;
-              exit(-1);
           }
         }
       }        
