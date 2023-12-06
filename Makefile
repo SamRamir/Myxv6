@@ -140,6 +140,8 @@ UPROGS=\
 	$U/_prodcons1\
 	$U/_prodcons2\
 	$U/_prodcons3\
+	$U/_prodcons-sem\
+
 
 
 fs.img: mkfs/mkfs README $(UPROGS)
