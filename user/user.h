@@ -29,10 +29,10 @@ int getprocs(struct pstat*);
 void* mmap(void*, uint64, int, int, int, uint64);
 int munmap(void*, uint64);
 // hw6 task 1
-int sem_init(int, int, int);
-int sem_destroy(int);
-int sem_wait(int);
-int sem_post(int);
+int sem_init(void*, int, int);
+int sem_destroy(void*);
+int sem_wait(void*);
+int sem_post(void*);
 
 
 // ulib.c

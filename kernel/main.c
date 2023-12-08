@@ -44,5 +44,7 @@ main()
 
   scheduler();   
   // mmrlistinit() // Not sure if needed again
+  // hw6 task2
+  seminit();
 
 }
