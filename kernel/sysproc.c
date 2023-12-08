@@ -108,10 +108,7 @@ sys_getprocs(void)
   return(procinfo(addr));
 }
 
-
-//hw6 task3
-
-//HMW6
+// hw 6 task 3 changes
 
 int
 sys_sem_init(void){

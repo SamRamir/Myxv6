@@ -142,6 +142,7 @@ UPROGS=\
 	$U/_prodcons2\
 	$U/_prodcons3\
 	$U/_prodcons-sem\
+#	$U/_testcases\
 
 
 
