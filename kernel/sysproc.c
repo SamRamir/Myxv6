@@ -116,6 +116,7 @@ sys_sem_init(void){
   int index;
   int value;
   int pshared;
+  // checking if values are valid
   if (argaddr(0,&s) < 0 || argint(1, &pshared) < 0 || argint(2, &value) < 0)
     return -1;
 
@@ -124,6 +125,7 @@ sys_sem_init(void){
   }
   index = semalloc();
   semtable.sem[index].count = value;
+  // copying allocated index semaphore
   if(copyout(myproc()->pagetable, s, (char*)&index, sizeof(index)) <0){
     return -1;
   }
@@ -140,7 +142,7 @@ sys_sem_destroy(void)
         return -1;
 
     uint64 sem_index;
-    // Copy the semaphore index from user space to kernel space
+    // Copying the semaphore index from user space to kernel space
     if (copyin(myproc()->pagetable, (char*)&sem_index, (uint64)sem, sizeof(sem_t)) < 0)
         return -1;
 
@@ -171,14 +173,14 @@ sys_sem_wait(void) {
     return 0;
   } else {
     while (semtable.sem[addr].count == 0) {
+      // using sleep
       sleep((void*)&semtable.sem[addr], &semtable.sem[addr].lock);
     }
-
+    // decreasing count
     semtable.sem[addr].count--;
     release(&semtable.sem[addr].lock);
   }
   
-  // Return 0 to indicate success
   return 0;
 }
 
@@ -194,6 +196,7 @@ sys_sem_post(void){
   
   acquire(&semtable.sem[addr].lock);
   semtable.sem[addr].count++;
+  // using wakeup
   wakeup((void*)&semtable.sem[addr]);
   
   release(&semtable.sem[addr].lock);

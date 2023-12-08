@@ -80,12 +80,12 @@ void consumer()
 
 int main(int argc, char *argv[])
 {
-  // test case 1 
-  int nproducers = 1;
-  int nconsumers = 1;
+  // test case 3
+  int nproducers = 5;
+  int nconsumers = 2;
   int i;
 
-  printf("This is test case 1 prodcons-sem 1 1 \n");
+  printf("This is test case 3 prodcons-sem 5 2\n");
 
   buffer = (buffer_t *) mmap(NULL, sizeof(buffer_t), 
                           PROT_READ | PROT_WRITE,

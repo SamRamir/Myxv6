@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
   int nconsumers = 1;
   int i;
 
-  printf("This is test case 1 prodcons-sem 1 1 \n");
+  printf("This is test case 4 prodcons-sem 4 7\n");
 
   buffer = (buffer_t *) mmap(NULL, sizeof(buffer_t), 
                           PROT_READ | PROT_WRITE,
