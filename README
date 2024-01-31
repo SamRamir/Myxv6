@@ -19,6 +19,7 @@ https://github.com/SamRamir/Myxv6/tree/Anonymous-Memory-Mappings-for-xv6
 
 Enhances memory management by introducing support for anonymous memory mappings.
 Lazy Allocation for xv6
+https://github.com/SamRamir/Myxv6/tree/Lazy-Allocation-for-xv6
 
 Optimizes memory allocation using lazy allocation strategies.
 
