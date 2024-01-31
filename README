@@ -16,14 +16,13 @@ https://github.com/SamRamir/Myxv6/blob/Semaphores-for-xv6/Semaphores%20for%20xv6
 Implements semaphores for better synchronization and coordination between processes.
 
 Anonymous Memory Mappings for xv6
-https://github.com/SamRamir/Myxv6/tree/Anonymous-Memory-Mappings-for-xv6
+https://github.com/SamRamir/Myxv6/blob/Anonymous-Memory-Mappings-for-xv6/Anonymous%20Memory%20Mappings%20for%20xv6%20Report%20Samuel%20Ramirez.pdf
 Enhances memory management by introducing support for anonymous memory mappings.
 
 Lazy Allocation for xv6
-https://github.com/SamRamir/Myxv6/tree/Lazy-Allocation-for-xv6
-Optimizes memory allocation using lazy allocation strategies.
-
+https://github.com/SamRamir/Myxv6/blob/Lazy-Allocation-for-xv6/kernel/Lazy%20Allocation%20for%20xv6%20report.pdfOptimizes memory allocation using lazy allocation strategies.
 xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
+
 Version 6 (v6).  xv6 loosely follows the structure and style of v6,
 but is implemented for a modern RISC-V multiprocessor using ANSI C.
 
