@@ -1,3 +1,25 @@
+## xv6 Operating System Enhancements
+This repository contains enhancements and additions to the xv6 operating system. Each branch represents a specific feature or improvement aimed at making xv6 more powerful and efficient.
+
+Features
+Priority Scheduler for xv6
+
+Introduces a priority-based scheduler to enhance task scheduling.
+Time Command
+
+Adds a new command to measure and display execution times.
+Semaphores for xv6
+
+Implements semaphores for better synchronization and coordination between processes.
+Anonymous Memory Mappings for xv6
+
+Enhances memory management by introducing support for anonymous memory mappings.
+Lazy Allocation for xv6
+
+Optimizes memory allocation using lazy allocation strategies.
+
+
+
 https://github.com/SamRamir/Myxv6/blob/a98d42ea1117cfaac037cdb2f1f7bbcb8c888cd8/Intro%20to%20xv6%20Samuel%20Ramirez.pdf
 https://github.com/SamRamir/Myxv6/blob/ab0ff31dd07e50e0f9b6e44485f6080e6f0ff56d/Time%20Command%20Samuel%20Ramirez.pdf
 https://github.com/SamRamir/Myxv6/blob/0713ffaf8728569cb3cbea424fe30ee6a945fd4a/Priority%20Scheduler%20Samuel%20Ramirez.pdf
