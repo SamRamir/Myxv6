@@ -1,4 +1,4 @@
-*xv6 Operating System Enhancements
+xv6 Operating System Enhancements
 
 This repository contains enhancements and additions to the xv6 operating system. Each branch represents a specific feature or improvement aimed at making xv6 more powerful and efficient.
 
@@ -9,7 +9,6 @@ https://github.com/SamRamir/Myxv6/blob/0713ffaf8728569cb3cbea424fe30ee6a945fd4a/
 Introduces a priority-based scheduler to enhance task scheduling.
 Time Command
 https://github.com/SamRamir/Myxv6/blob/ab0ff31dd07e50e0f9b6e44485f6080e6f0ff56d/Time%20Command%20Samuel%20Ramirez.pdf
-
 
 Adds a new command to measure and display execution times.
 Semaphores for xv6
